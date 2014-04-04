@@ -53,7 +53,7 @@ void apply_square(int x, int y, int size) {
 			}
 		}
 	}
-	printf("PAINTSQ %d %d %d\n", x, y, size);
+	printf("PAINTSQ %d %d %d\n", y, x, size);
 }
 
 int main() {
@@ -78,8 +78,8 @@ int main() {
 	}
 	fclose(fp);
 
-	for(int size = 8; size; size--) {
-		int score_lim = size * size / 2;
+	for(int size = 5; size; size--) {
+		int score_lim = size * size / 4;
 		for(int i=0; i < w; ++i) {
 			for(int j=0; j < h; ++j) {
 				int score = score_square(i, j, size);
@@ -92,7 +92,7 @@ int main() {
 	for(int i=0; i < w; ++i) {
 		for(int j=0; j < h; ++j) {
 			if(states[i+j*w] == TO_DEPAINT) {
-				printf("ERASECELL %d %d\n", i, j);
+				printf("ERASECELL %d %d\n", j, i);
 			}
 		}
 	}
