@@ -1,4 +1,4 @@
-CFLAGS = -std=gnu99
+CFLAGS = -std=gnu99 -Wall -O3
 
 
 all: v1-fh
