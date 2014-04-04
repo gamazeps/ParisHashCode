@@ -18,10 +18,10 @@ int w,h;
 int score_square(int x, int y, int size) {
 	int score = 0;
 	for(int i=x-size; i <= x+size; ++i) {
-		if(i < 0 || i >w)
+		if(i < 0 || i >=w)
 			return -1;
 		for(int j=y-size; j <= y+size; ++j) {
-			if(j<0 || j>h)
+			if(j<0 || j>=h)
 				return -1;
 
 			volatile int pos = i + j*w;
@@ -58,13 +58,13 @@ void apply_square(int x, int y, int size) {
 
 int main() {
 	FILE* fp = fopen("doodle.txt", "r");
-	fscanf(fp, "%d %d", &w, &h);
+	fscanf(fp, "%d %d", &h, &w);
 
 	values = malloc(h*w);
 	bzero(values, w*h);
 
 	states = malloc(h*w*sizeof(state_t));
-	bzero(states, w*h);
+	bzero(states, w*h*sizeof(state_t));
 
 	for(int i=0; i < (w*h); ) {
 		char c;
@@ -78,7 +78,7 @@ int main() {
 	}
 	fclose(fp);
 
-	for(int size = 5; size; size--) {
+	for(int size = 1; size; size--) {
 		int score_lim = size * size / 4;
 		for(int i=0; i < w; ++i) {
 			for(int j=0; j < h; ++j) {
