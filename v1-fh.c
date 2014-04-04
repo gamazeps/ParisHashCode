@@ -28,7 +28,7 @@ int score_square(int x, int y, int size) {
 			if(states[pos] == NOT_PAINTED && values[pos])
 				score++;
 			if(!values[pos] &&  states[pos] != TO_DEPAINT)
-				score--;
+				score -= 12;
 		}
 	}
 	return score;
@@ -78,8 +78,8 @@ int main() {
 	}
 	fclose(fp);
 
-	for(int size = 1; size>=0; size--) {
-		int score_lim = size * size / 4;
+	for(int size = 10; size>=0; size--) {
+		int score_lim = 2*size * size ;
 		for(int i=0; i < w; ++i) {
 			for(int j=0; j < h; ++j) {
 				int score = score_square(i, j, size);
