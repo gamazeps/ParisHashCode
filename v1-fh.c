@@ -78,7 +78,7 @@ int main() {
 	}
 	fclose(fp);
 
-	for(int size = 1; size; size--) {
+	for(int size = 1; size>=0; size--) {
 		int score_lim = size * size / 4;
 		for(int i=0; i < w; ++i) {
 			for(int j=0; j < h; ++j) {
