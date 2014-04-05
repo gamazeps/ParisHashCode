@@ -70,10 +70,21 @@ void voiture_goto(int voiture, int dest, int cout) {
 	trajet_voitures[voiture].push_back(dest);
 }
 
-void decide_voiture(int source, std::list<dest_t>& d, int back) {
+void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	double max_np=0;
 	int max_np_id=0;
+
+	int r = rand()%d.size();
+	int i = 0;
+	int dest = 0;
+	int cout = 0;
 	for(auto& t: d) {
+		if(r == i) {
+			dest = t.a;
+			cout = t.cout;
+		}
+		++i;
+		/*
 		if(t.a == back)
 			continue;
 		if(!rues[t.a].parcourue) {
@@ -82,7 +93,10 @@ void decide_voiture(int source, std::list<dest_t>& d, int back) {
 				max_np_id = t.a;
 			}
 		}
+		*/
 	}
+
+	voiture_goto(id, dest, cout);
 }
 
 int main() {
@@ -134,7 +148,7 @@ int main() {
 			}
 
 			auto& d = dests[voitures[i].position]; 
-			decide_voiture(voitures[i].position, d, voitures[i].provenance);
+			decide_voiture(i, voitures[i].position, d, voitures[i].provenance);
 		}
 	}
 
