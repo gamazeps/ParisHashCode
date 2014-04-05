@@ -78,8 +78,8 @@ pos_t interesting[] = {
 	{ 48.8888890, 2.3736950 },
 	//Nation
 	{ 48.8483940, 2.3959100 },
-	//Marais
-	{ 48.8627950, 2.3632240 }
+	//Chatelet
+	{ 48.8550160, 2.3552420 }
 };
 
 double disti(int voiture, int a) {
@@ -319,7 +319,7 @@ int main() {
 				continue;
 			}
 
-			auto& d = dests[voitures[i].position]; 
+			auto& d = dests[voitures[i].position];
 			decide_voiture(i, voitures[i].position, d, voitures[i].provenance);
 		}
 	}
