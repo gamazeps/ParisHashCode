@@ -23,6 +23,7 @@ typedef struct {
 } rue_t;
 
 typedef struct {
+	int temps_arrive;
 	int temps_restant;
 	int position;
 	int provenance;
@@ -102,7 +103,10 @@ float compute_coef_simp(int id, int dest1, int dest2) {
 
 	d1 = disti(id, dest1);
 	d2 = disti(id, dest2);
-	if( d1 > 0.05) {
+	if( d1 < 0.02 && !voitures[id].temps_arrive) {
+		voitures[id].temps_arrive = temps_restant;
+	}
+	if(!voitures[id].temps_arrive) {
 	  coef *= exp( ((d1-d2 ) * 1000));
 	}
 	return coef;
