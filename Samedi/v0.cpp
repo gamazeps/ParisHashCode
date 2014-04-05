@@ -95,8 +95,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		}
 		*/
 	}
-
-	voiture_goto(id, dest, cout);
+	if(temps_restant > cout)
+		voiture_goto(id, dest, cout);
 }
 
 int main() {
