@@ -18,7 +18,7 @@ typedef struct {
 	int cout;
 	int score;
 
-	bool parcourue;
+	int parcourue;
 } rue_t;
 
 typedef struct {
@@ -70,7 +70,7 @@ void voiture_goto(int voiture, int dest, int cout, int rue) {
 	voitures[voiture].provenance=voitures[voiture].position;
 	voitures[voiture].position=dest;
 	trajet_voitures[voiture].push_back(dest);
-	rues[rue].parcourue = true;
+	rues[rue].parcourue++;
 }
 
 void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
@@ -106,17 +106,21 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 		*/
-		float good_way = 0.8;
-		float bad_way = 1.4;
+		float good_way = 1.4;
+		float bad_way = 0.8;
+
+		float lat_orig = inter[voitures[id].position].lat;
+		float lat_dest = inter[t.a].lat;
+
 		if( id&1) {
-			float lat_orig = inter[voitures[id].position].lat;
-			float lat_dest = inter[t.a].lat;
 			if(lat_orig > 48.86) {
 				if(lat_dest > lat_orig)
 					coef *= bad_way;
 				else
 					coef *= good_way;
-			} else if(lat_orig < 48.84) {
+			}
+		} else {
+			if(lat_orig < 48.84) {
 				if(lat_dest < lat_orig)
 					coef *= bad_way;
 				else
@@ -124,15 +128,17 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 
+		float lon_orig = inter[voitures[id].position].lon;
+		float lon_dest = inter[t.a].lon;
 		if( (id>>1)&1) {
-			float lon_orig = inter[voitures[id].position].lon;
-			float lon_dest = inter[t.a].lon;
 			if(lon_orig > 2.33) {
 				if(lon_dest > lon_orig)
 					coef *= bad_way;
 				else
 					coef *= good_way;
-			} else if(lon_orig < 2.31) {
+			}
+		} else {
+			if(lon_orig < 2.31) {
 				if(lon_dest < lon_orig)
 					coef *= bad_way;
 				else
@@ -140,7 +146,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 
-		if(!rues[t.rue].parcourue) {
+		if(rues[t.rue].parcourue < 1) {
+			coef /= ( 1 << rues[t.rue].parcourue);
 			if((coef*own_score(source, t)) > max_np) {
 				max_np = own_score(source, t)*coef;
 				max_np_id = t.a;
