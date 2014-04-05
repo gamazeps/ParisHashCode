@@ -60,6 +60,20 @@ pos_t interesting[] = {
 	{ 48.8587060, 2.3474560 }
 };
 
+double disti(int voiture, int a) {
+	double d = 0;
+	double tmp;
+	tmp = inter[a].lon - interesting[voiture].lon;
+	tmp *= tmp;
+	d+=tmp;
+
+	tmp = inter[a].lat - interesting[voiture].lat;
+	tmp *= tmp;
+	d+=tmp;
+
+	return d;
+}
+
 double dist(int a, int b) {
 	double d = 0;
 	double tmp;
@@ -125,6 +139,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 		*/
+#if 0
 		float good_way = 1.4;
 		float bad_way = 0.8;
 
@@ -180,6 +195,17 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			} else {
 				if(lon_orig < 2.35)
 					coef *= bad_way2;
+			}
+		}
+#endif
+		double d1,d2;
+		d1 = disti(id, voitures[id].position);
+		d2 = disti(id, voitures[id].position);
+		if(d1 > 1500) {
+			if( (d2-d1) > 50) {
+				coef *= 0.5;
+			} else {
+				coef *= 2.0;
 			}
 		}
 
