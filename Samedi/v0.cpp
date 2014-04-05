@@ -228,6 +228,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		}
 	}
 	if(max_np_id == -1) {
+		int ran = rand()%10;
 #if 0
 		double sum = 0;
 		for(auto v: scores)
@@ -249,7 +250,10 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		}
 		voiture_goto(id, u->a, u->cout, u->rue);
 #endif
-		voiture_goto(id, dest_min, cout_min, rue_min);
+		if(ran < 3)
+			voiture_goto(id, dest_min, cout_min, rue_min);
+		else
+			voiture_goto(id, dest_rand, cout_rand, rue_rand);
 	} else {
 		voiture_goto(id, max_np_d.a, max_np_d.cout, max_np_d.rue);
 	}
