@@ -185,6 +185,12 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	int cout_rand = -1;
 	int rue_rand = 0;
 
+	int dest_min = 0;
+	int cout_rand = -1;
+	int rue_rand = 0;
+
+	std::list<double> scores;
+
 	dest_t max_np_d;
 	for(auto& t: d) {
 		//Random part
@@ -195,79 +201,15 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		}
 		++i;
 
-		if(t.a == back)
-			continue;
 		//Pour les voitures impaires, au debut, on privilegie les longues routes (periph)
 		double coef = 1.0;
-		/*
-		if(temps_restant > 20000 && (id&1)) {
-			if(rues[t.rue].score > 300) {
-				coef *= 5;
-			}
-		}
-		*/
-#if 0
-		float good_way = 1.4;
-		float bad_way = 0.8;
 
-		float bad_way2 = 0.8;
-
-		float lat_orig = inter[voitures[id].position].lat;
-		float lat_dest = inter[t.a].lat;
-
-		float lat_mid = 48.83;
-
-		if( id&1) {
-			if(lat_orig > lat_mid) {
-				if(lat_dest > lat_orig)
-					coef *= bad_way;
-				else
-					coef *= good_way;
-			} else {
-				//On est du bon cote
-				//Mais trop loin
-				if(lat_orig < 48.83)
-					coef *= bad_way2;
-			}
-		} else {
-			if(lat_orig < lat_mid) {
-				if(lat_dest < lat_orig)
-					coef *= bad_way;
-				else
-					coef *= good_way;
-			} else {
-				if(lat_orig > 48.89)
-					coef *= bad_way2;
-			}
-		}
-
-		float lon_orig = inter[voitures[id].position].lon;
-		float lon_dest = inter[t.a].lon;
-		if( (id>>1)&1) {
-			if(lon_orig > 2.32) {
-				if(lon_dest > lon_orig)
-					coef *= bad_way;
-				else
-					coef *= good_way;
-			} else {
-				if(lon_orig < 2.29)
-					coef *= bad_way2;
-			}
-		} else {
-			if(lon_orig < 2.32) {
-				if(lon_dest < lon_orig)
-					coef *= bad_way;
-				else
-					coef *= good_way;
-			} else {
-				if(lon_orig < 2.35)
-					coef *= bad_way2;
-			}
-		}
-#endif
 		coef = compute_coef_depth(id, voitures[id].position, t.a, t.rue);
+		scores.push_back(coef);
+		if(t.a == back)
+			continue;
 
-		if(rues[t.rue].parcourue < 8) {
+		if(rues[t.rue].parcourue < 2) {
 			coef /= 1 + (rues[t.rue].parcourue+1);
 			if((coef*own_score(id, source, t)) > max_np) {
 				max_np = own_score(id, source, t)*coef;
@@ -279,7 +221,25 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	}
 	int ran = rand()%100;
 	if(max_np_id == -1 || ran < 5) {
-		voiture_goto(id, dest_rand, cout_rand, rue_rand);
+		double sum = 0;
+		for(auto v: scores)
+			sum+=v;
+
+		double rand_v = rand();
+		rand_v /= RAND_MAX;
+		rand_v *= sum;
+
+		double tmp = 0;
+		auto u = d.begin();
+		auto v = scores.begin();
+		while(tmp<rand_v) {
+			tmp += *v;
+			if(tmp>=rand_v)
+				break;
+			++u;
+			++v;
+		}
+		voiture_goto(id, u->a, u->cout, u->rue);
 	} else {
 		voiture_goto(id, max_np_d.a, max_np_d.cout, max_np_d.rue);
 	}
