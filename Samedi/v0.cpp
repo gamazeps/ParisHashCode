@@ -76,12 +76,16 @@ void voiture_goto(int voiture, int dest, int cout, int rue) {
 void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	double max_np=0;
 	int max_np_id=-1;
+	int max_np_dest=-1;
+	int max_np_cout=-1;
+	int max_np_rue=-1;
 
 	int r = rand()%d.size();
 	int i = 0;
 	int dest_rand = 0;
 	int cout_rand = -1;
 	int rue_rand = 0;
+	dest_t max_np_d;
 	for(auto& t: d) {
 		//Random part
 		if(r == i) {
@@ -93,15 +97,19 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 
 		if(t.a == back)
 			continue;
-		if(!rues[t.a].parcourue) {
+		if(!rues[t.rue].parcourue) {
 			if(own_score(source, t) > max_np) {
 				max_np = own_score(source, t);
 				max_np_id = t.a;
+
+				max_np_d = t;
 			}
 		}
 	}
 	if(max_np_id == -1) {
 		voiture_goto(id, dest_rand, cout_rand, rue_rand);
+	} else {
+		voiture_goto(id, max_np_d.a, max_np_d.cout, max_np_d.rue);
 	}
 }
 
