@@ -186,8 +186,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	int rue_rand = 0;
 
 	int dest_min = 0;
-	int cout_rand = -1;
-	int rue_rand = 0;
+	int cout_min = -1;
+	int rue_min = 0;
 
 	std::list<double> scores;
 
