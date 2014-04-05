@@ -89,6 +89,7 @@ double dist(int a, int b) {
 }
 
 double own_score(int a, dest_t d) {
+	return 1;
 	return (1.0*d.score)/(1.0*d.cout);
 }
 
@@ -201,16 +202,16 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		double d1,d2;
 		d1 = disti(id, voitures[id].position);
 		d2 = disti(id, voitures[id].position);
-		if(d1 > 1500) {
-			if( (d2-d1) > 50) {
-				coef *= 0.5;
+		if(d1 > 1000) {
+			if( (d2-d1) > 0) {
+				coef /= (d2-d1);
 			} else {
-				coef *= 2.0;
+				coef *= (d1-d2);
 			}
 		}
 
-		if(rues[t.rue].parcourue < 1) {
-			coef /= ( 1 << rues[t.rue].parcourue);
+		if(rues[t.rue].parcourue < 7) {
+			coef /= 1 + rues[t.rue].parcourue;
 			if((coef*own_score(source, t)) > max_np) {
 				max_np = own_score(source, t)*coef;
 				max_np_id = t.a;
