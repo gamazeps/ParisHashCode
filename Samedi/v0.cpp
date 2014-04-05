@@ -72,7 +72,7 @@ double disti(int voiture, int a) {
 	tmp *= tmp;
 	d+=tmp;
 
-	return d;
+	return sqrt(d);
 }
 
 double dist(int a, int b) {
@@ -109,7 +109,7 @@ void voiture_goto(int voiture, int dest, int cout, int rue) {
 }
 
 void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
-	double max_np=0;
+	double max_np=-999999999;
 	int max_np_id=-1;
 	int max_np_dest=-1;
 	int max_np_cout=-1;
@@ -203,9 +203,9 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		double d1,d2;
 		d1 = disti(id, voitures[id].position);
 		d2 = disti(id, t.a);
-		if(d1 > 1000) {
-			coef *= exp(d1-d2);
-		}
+		/*if( d1 > 0.03) {
+		}*/
+		coef *= exp( (d1-d2) * 1000);
 
 		if(rues[t.rue].parcourue < 7) {
 			coef /= 1 + (rand()%(rues[t.rue].parcourue+1));
