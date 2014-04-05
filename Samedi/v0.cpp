@@ -67,7 +67,7 @@ pos_t interesting[] = {
 	//Place d'italie
 	{ 48.8314830, 2.3556920},
 	//Lecourbe
-	{ 48.8409670, 2.2958170},
+	{ 48.8414020, 2.2976090},
 	//Didot
 	{ 48.8277090, 2.3197680 },	
 	//Trocadero
@@ -252,7 +252,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 #endif
 		coef = compute_coef_depth(id, t.a);
 
-		if(rues[t.rue].parcourue < 2) {
+		if(rues[t.rue].parcourue < 3) {
 			coef /= 1 + (rues[t.rue].parcourue+1);
 			if((coef*own_score(source, t)) > max_np) {
 				max_np = own_score(source, t)*coef;
