@@ -41,6 +41,24 @@ typedef struct {
 } dest_t;
 std::list<dest_t> *dests;
 
+pos_t interesting[] = {
+	//Place d'italie
+	{ 48.8314830, 2.3556920},
+	//Denfert
+	{ 48.8338640, 2.3326150},
+	//Rue du bac
+	{ 48.8559550, 2.3255770 },
+	//Etoile
+	{ 48.8743062, 2.2947665 },
+	//Clichy
+	{ 48.8835876, 2.3271952},
+	//Stalingrad
+	{ 48.8840350, 2.3684600},
+	//Nation
+	{ 48.8483940, 2.3959100 },
+	{}
+};
+
 double dist(int a, int b) {
 	double d = 0;
 	double tmp;
@@ -114,8 +132,10 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		float lat_orig = inter[voitures[id].position].lat;
 		float lat_dest = inter[t.a].lat;
 
+		float lat_mid = 48.83;
+
 		if( id&1) {
-			if(lat_orig > 48.86) {
+			if(lat_orig > lat_mid) {
 				if(lat_dest > lat_orig)
 					coef *= bad_way;
 				else
@@ -127,7 +147,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 					coef *= bad_way2;
 			}
 		} else {
-			if(lat_orig < 48.86) {
+			if(lat_orig < lat_mid) {
 				if(lat_dest < lat_orig)
 					coef *= bad_way;
 				else
