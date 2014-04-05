@@ -42,6 +42,7 @@ typedef struct {
 } dest_t;
 std::list<dest_t> *dests;
 
+/*
 pos_t interesting[] = {
 	//Place d'italie
 	{ 48.8314830, 2.3556920},
@@ -59,6 +60,25 @@ pos_t interesting[] = {
 	{ 48.8483940, 2.3959100 },
 	//Chatelet
 	{ 48.8587060, 2.3474560 }
+};*/
+
+pos_t interesting[] = {
+	//Place d'italie
+	{ 48.8314830, 2.3556920},
+	//Lecourbe
+	{ 48.8409670, 2.2958170},
+	//Assas
+	{ 48.8468840, 2.3318660 },
+	//Trocadero
+	{ 48.8638670, 2.2888090 },
+	//Clichy
+	{ 48.8835876, 2.3271952},
+	//Riquet
+	{ 48.8888890, 2.3736950 },
+	//Nation
+	{ 48.8483940, 2.3959100 },
+	//Marais
+	{ 48.8627950, 2.3632240 }
 };
 
 double disti(int voiture, int a) {
