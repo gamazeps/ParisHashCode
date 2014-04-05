@@ -110,11 +110,11 @@ float compute_coef_simp(int id, int dest1, int dest2, int rue) {
 	  coef *= exp( (d1-d2 ) * 1000);
 	}
 	if(rues[rue].parcourue)
-		coef /= 10;
+		coef /= 5;
 	return coef;
 }
 
-float compute_coef_depth(int id, int src, int dest, int rue, int level=3) {
+float compute_coef_depth(int id, int src, int dest, int rue, int level=5) {
 	double coef_max=0.2;
 
 	for(auto& t: dests[dest]) {
@@ -124,7 +124,7 @@ float compute_coef_depth(int id, int src, int dest, int rue, int level=3) {
 		if(coef > coef_max)
 			coef_max = coef;
 	}
-	return coef_max*0.3 + compute_coef_simp(id, voitures[id].position, dest, rue);
+	return coef_max*0.6 + compute_coef_simp(id, voitures[id].position, dest, rue);
 }
 
 double dist(int a, int b) {
