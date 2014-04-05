@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -36,6 +37,7 @@ typedef struct {
 	int a;
 	int cout;
 	int score;
+	int rue;
 } dest_t;
 std::list<dest_t> *dests;
 
@@ -59,7 +61,7 @@ double own_score(int a, dest_t d) {
 
 std::list<int> *trajet_voitures;
 
-void voiture_goto(int voiture, int dest, int cout) {
+void voiture_goto(int voiture, int dest, int cout, int rue) {
 	if(voitures[voiture].temps_restant) {
 		fprintf(stderr, "FAILED\n");
 		exit(1);
@@ -68,20 +70,23 @@ void voiture_goto(int voiture, int dest, int cout) {
 	voitures[voiture].provenance=voitures[voiture].position;
 	voitures[voiture].position=dest;
 	trajet_voitures[voiture].push_back(dest);
+	rues[rue].parcourue = true;
 }
 
 void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	double max_np=0;
-	int max_np_id=0;
+	int max_np_id=-1;
 
 	int r = rand()%d.size();
 	int i = 0;
-	int dest = 0;
-	int cout = 0;
+	int dest_rand = 0;
+	int cout_rand = -1;
+	int rue_rand = 0;
 	for(auto& t: d) {
 		if(r == i) {
-			dest = t.a;
-			cout = t.cout;
+			dest_rand = t.a;
+			cout_rand = t.cout;
+			rue_rand = t.rue;
 		}
 		++i;
 		/*
@@ -95,11 +100,13 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		}
 		*/
 	}
-	if(temps_restant > cout)
-		voiture_goto(id, dest, cout);
+	if(max_np_id == -1) {
+		voiture_goto(id, dest_rand, cout_rand, rue_rand);
+	}
 }
 
 int main() {
+	srand(time(NULL));
 	FILE* fp = fopen("paris_54000.txt", "r");
 	fscanf(fp, "%d %d %d %d %d",
 			&n_intersections,
@@ -111,8 +118,9 @@ int main() {
 	bzero(voitures, sizeof(voiture_t) * n_voitures);
 	trajet_voitures = new std::list<int>[n_voitures];
 	for(int i=0; i<n_voitures; ++i) {
-		voiture_goto(i, origine, 0);
+		trajet_voitures[i].push_back(origine);
 		voitures[i].provenance=-1;
+		voitures[i].position=origine;
 	}
 
 
@@ -136,6 +144,7 @@ int main() {
 		tmp.a = rues[i].b;
 		tmp.cout = rues[i].cout;
 		tmp.score = rues[i].score;
+		tmp.rue = i;
 		dests[rues[i].a].push_front(tmp);
 		if(!rues[i].mono) {
 			tmp.a = rues[i].a;
@@ -165,4 +174,11 @@ int main() {
 			printf("%d\n", t);
 		}
 	}
+
+	int total = 0;
+	for(int i=0; i< n_rues; ++i) {
+		if(rues[i].parcourue)
+			total += rues[i].score;
+	}
+	fprintf(stderr, "score = %d\n", total);
 }
