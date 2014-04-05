@@ -97,9 +97,17 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 
 		if(t.a == back)
 			continue;
+		//Pour les voitures impaires, au debut, on privilegie les longues routes (periph)
+		double coef = 1.0;
+		if(temps_restant > 40000 && (id&1)) {
+			if(rues[t.rue].score > 300) {
+				coef *= 5;
+			}
+		}
+
 		if(!rues[t.rue].parcourue) {
-			if(own_score(source, t) > max_np) {
-				max_np = own_score(source, t);
+			if((coef*own_score(source, t)) > max_np) {
+				max_np = own_score(source, t)*coef;
 				max_np_id = t.a;
 
 				max_np_d = t;
