@@ -186,6 +186,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	int rue_rand = 0;
 
 	int dest_min = 0;
+	int score_min = -1;
 	int cout_min = -1;
 	int rue_min = 0;
 
@@ -200,6 +201,13 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			rue_rand = t.rue;
 		}
 		++i;
+
+		if(score_min == -1 || t.score < score_min) {
+			score_min = t.score;
+			dest_min = t.a;
+			cout_min = t.cout;
+			rue_min = t.rue;
+		}
 
 		//Pour les voitures impaires, au debut, on privilegie les longues routes (periph)
 		double coef = 1.0;
@@ -219,8 +227,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 	}
-	int ran = rand()%100;
-	if(max_np_id == -1 || ran < 5) {
+	if(max_np_id == -1) {
+#if 0
 		double sum = 0;
 		for(auto v: scores)
 			sum+=v;
@@ -240,6 +248,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			++v;
 		}
 		voiture_goto(id, u->a, u->cout, u->rue);
+#endif
+		voiture_goto(id, dest_min, cout_min, rue_min);
 	} else {
 		voiture_goto(id, max_np_d.a, max_np_d.cout, max_np_d.rue);
 	}
