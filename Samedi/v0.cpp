@@ -67,9 +67,9 @@ pos_t interesting[] = {
 	//Place d'italie
 	{ 48.8314830, 2.3556920},
 	//Lecourbe
-	{ 48.8414020, 2.2976090},
-	//Didot
-	{ 48.8277090, 2.3197680 },	
+	{ 48.8409670, 2.2958170},
+	//Assas
+	{ 48.8468840, 2.3318660 },
 	//Trocadero
 	{ 48.8638670, 2.2888090 },
 	//Clichy
@@ -96,33 +96,35 @@ double disti(int voiture, int a) {
 	return sqrt(d);
 }
 
-float compute_coef_simp(int id, int dest1, int dest2) {
+float compute_coef_simp(int id, int dest1, int dest2, int rue) {
 	double coef=1;
 
 	double d1,d2;
 
 	d1 = disti(id, dest1);
 	d2 = disti(id, dest2);
-	if( d1 < 0.003 && !voitures[id].temps_arrive) {
+	if( d1 < 0.001 && !voitures[id].temps_arrive) {
 		voitures[id].temps_arrive = temps_restant;
 	}
 	if(!voitures[id].temps_arrive) {
-	  coef *= exp( ((d1-d2 ) * 1000));
+	  coef *= exp( (d1-d2 ) * 1000);
 	}
+	if(rues[rue].parcourue)
+		coef /= 10;
 	return coef;
 }
 
-float compute_coef_depth(int id, int dest) {
+float compute_coef_depth(int id, int src, int dest, int rue, int level=1) {
 	double coef_max=0.2;
 
 	for(auto& t: dests[dest]) {
-		double coef = compute_coef_simp(id, dest, t.a);
-		if(rues[t.rue].parcourue)
-			continue;
+		double coef = compute_coef_simp(id, dest, t.a, t.rue);
+		if(level)
+			coef += compute_coef_depth(id, dest, t.a, t.rue, --level);
 		if(coef > coef_max)
 			coef_max = coef;
 	}
-	return coef_max*0.3 + compute_coef_simp(id, voitures[id].position, dest);
+	return coef_max*0.3 + compute_coef_simp(id, voitures[id].position, dest, rue);
 }
 
 double dist(int a, int b) {
@@ -250,9 +252,9 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 #endif
-		coef = compute_coef_depth(id, t.a);
+		coef = compute_coef_depth(id, voitures[id].position, t.a, t.rue);
 
-		if(rues[t.rue].parcourue < 3) {
+		if(rues[t.rue].parcourue < 4) {
 			coef /= 1 + (rues[t.rue].parcourue+1);
 			if((coef*own_score(source, t)) > max_np) {
 				max_np = own_score(source, t)*coef;
