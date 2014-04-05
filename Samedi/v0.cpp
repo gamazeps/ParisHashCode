@@ -109,12 +109,12 @@ float compute_coef_simp(int id, int dest1, int dest2, int rue) {
 	if(!voitures[id].temps_arrive) {
 	  coef *= exp( (d1-d2 ) * 8000);
 	}
-	if(rues[rue].parcourue)
-		coef /= 5;
+	if(!rues[rue].parcourue)
+	  coef += (54000 - temps_restant) ;
 	return coef;
 }
 
-float compute_coef_depth(int id, int src, int dest, int rue, int level=2, std::list<int> browsed=std::list<int>()) {
+float compute_coef_depth(int id, int src, int dest, int rue, int level=8, std::list<int> browsed=std::list<int>()) {
 	double coef_max=0.2;
 
 	for(auto& t: dests[dest]) {
@@ -266,7 +266,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 #endif
 		coef = compute_coef_depth(id, voitures[id].position, t.a, t.rue);
 
-		if(rues[t.rue].parcourue < 4) {
+		if(rues[t.rue].parcourue < 8) {
 			coef /= 1 + (rues[t.rue].parcourue+1);
 			if((coef*own_score(id, source, t)) > max_np) {
 				max_np = own_score(id, source, t)*coef;
