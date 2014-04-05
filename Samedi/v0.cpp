@@ -109,11 +109,12 @@ int main() {
 			&origine);
 	voitures = new voiture_t[n_voitures];
 	bzero(voitures, sizeof(voiture_t) * n_voitures);
+	trajet_voitures = new std::list<int>[n_voitures];
 	for(int i=0; i<n_voitures; ++i) {
-		voitures[i].position = origine;
+		voiture_goto(i, origine, 0);
+		voitures[i].provenance=-1;
 	}
 
-	trajet_voitures = new std::list<int>[n_voitures];
 
 	inter = new pos_t[n_intersections];
 	bzero(inter, sizeof(pos_t) * n_intersections);
