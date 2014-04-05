@@ -99,9 +99,21 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			continue;
 		//Pour les voitures impaires, au debut, on privilegie les longues routes (periph)
 		double coef = 1.0;
-		if(temps_restant > 40000 && (id&1)) {
+		/*
+		if(temps_restant > 20000 && (id&1)) {
 			if(rues[t.rue].score > 300) {
 				coef *= 5;
+			}
+		}
+		*/
+		if( id&1) {
+			float lat_orig = inter[voitures[id].position].lat;
+			float lat_dest = inter[t.a].lat;
+			if(lat_orig > 48.85) {
+				if(lat_dest > lat_orig)
+					coef *= 0.2;
+				else
+					coef *= 1.8;
 			}
 		}
 
