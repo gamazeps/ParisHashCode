@@ -217,7 +217,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 		if(t.a == back)
 			continue;
 
-		if(rues[t.rue].parcourue < 2) {
+		if(rues[t.rue].parcourue < 8) {
 			coef /= 1 + (rues[t.rue].parcourue+1);
 			if((coef*own_score(id, source, t)) > max_np) {
 				max_np = own_score(id, source, t)*coef;
