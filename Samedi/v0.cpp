@@ -106,14 +106,37 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 		*/
+		float good_way = 0.8;
+		float bad_way = 1.4;
 		if( id&1) {
 			float lat_orig = inter[voitures[id].position].lat;
 			float lat_dest = inter[t.a].lat;
-			if(lat_orig > 48.85) {
+			if(lat_orig > 48.86) {
 				if(lat_dest > lat_orig)
-					coef *= 0.2;
+					coef *= bad_way;
 				else
-					coef *= 1.8;
+					coef *= good_way;
+			} else if(lat_orig < 48.84) {
+				if(lat_dest < lat_orig)
+					coef *= bad_way;
+				else
+					coef *= good_way;
+			}
+		}
+
+		if( (id>>1)&1) {
+			float lon_orig = inter[voitures[id].position].lon;
+			float lon_dest = inter[t.a].lon;
+			if(lon_orig > 2.33) {
+				if(lon_dest > lon_orig)
+					coef *= bad_way;
+				else
+					coef *= good_way;
+			} else if(lon_orig < 2.31) {
+				if(lon_dest < lon_orig)
+					coef *= bad_way;
+				else
+					coef *= good_way;
 			}
 		}
 
