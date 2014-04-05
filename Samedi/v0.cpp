@@ -103,7 +103,7 @@ float compute_coef_simp(int id, int dest1, int dest2) {
 
 	d1 = disti(id, dest1);
 	d2 = disti(id, dest2);
-	if( d1 < 0.02 && !voitures[id].temps_arrive) {
+	if( d1 < 0.003 && !voitures[id].temps_arrive) {
 		voitures[id].temps_arrive = temps_restant;
 	}
 	if(!voitures[id].temps_arrive) {
@@ -117,6 +117,8 @@ float compute_coef_depth(int id, int dest) {
 
 	for(auto& t: dests[dest]) {
 		double coef = compute_coef_simp(id, dest, t.a);
+		if(rues[t.rue].parcourue)
+			continue;
 		if(coef > coef_max)
 			coef_max = coef;
 	}
