@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -201,17 +202,13 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 #endif
 		double d1,d2;
 		d1 = disti(id, voitures[id].position);
-		d2 = disti(id, voitures[id].position);
+		d2 = disti(id, t.a);
 		if(d1 > 1000) {
-			if( (d2-d1) > 0) {
-				coef /= (d2-d1);
-			} else {
-				coef *= (d1-d2);
-			}
+			coef *= exp(d1-d2);
 		}
 
 		if(rues[t.rue].parcourue < 7) {
-			coef /= 1 + rues[t.rue].parcourue;
+			coef /= 1 + (rand()%(rues[t.rue].parcourue+1));
 			if((coef*own_score(source, t)) > max_np) {
 				max_np = own_score(source, t)*coef;
 				max_np_id = t.a;
