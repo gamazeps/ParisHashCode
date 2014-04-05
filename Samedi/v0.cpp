@@ -27,14 +27,14 @@ int main() {
 			&n_vehicules,
 			&origine);
 
-	pos_t *inter = malloc(sizeof(pos_t) * n_intersections);
-	bzero(pos_inter, sizeof(pos_t) * n_intersections);
+	pos_t *inter = new pos_t[n_intersections];
+	bzero(inter, sizeof(pos_t) * n_intersections);
 
 	for(int i=0; i<n_intersections; ++i) {
-		fscanf(fp, "%f %f", &pos_inter[i].lat, &pos_inter[i].lon);
+		fscanf(fp, "%f %f", &inter[i].lat, &inter[i].lon);
 	}
 
-	rue_t rues = malloc(sizeof(rue_t)*n_rues);
+	rue_t *rues = new rue_t[n_rues];
 	bzero(rues, sizeof(rue_t)*n_rues);
 
 	for(int i=0; i<n_rues; ++i) {
