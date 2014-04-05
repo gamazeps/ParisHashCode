@@ -184,6 +184,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	int dest_rand = 0;
 	int cout_rand = -1;
 	int rue_rand = 0;
+
 	dest_t max_np_d;
 	for(auto& t: d) {
 		//Random part
@@ -276,7 +277,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 	}
-	if(max_np_id == -1) {
+	int ran = rand()%100;
+	if(max_np_id == -1 || ran < 5) {
 		voiture_goto(id, dest_rand, cout_rand, rue_rand);
 	} else {
 		voiture_goto(id, max_np_d.a, max_np_d.cout, max_np_d.rue);
