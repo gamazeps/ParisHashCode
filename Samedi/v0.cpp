@@ -114,7 +114,7 @@ float compute_coef_simp(int id, int dest1, int dest2, int rue) {
 	return coef;
 }
 
-float compute_coef_depth(int id, int src, int dest, int rue, int level=1) {
+float compute_coef_depth(int id, int src, int dest, int rue, int level=3) {
 	double coef_max=0.2;
 
 	for(auto& t: dests[dest]) {
