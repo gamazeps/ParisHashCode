@@ -107,24 +107,37 @@ float compute_coef_simp(int id, int dest1, int dest2, int rue) {
 		voitures[id].temps_arrive = temps_restant;
 	}
 	if(!voitures[id].temps_arrive) {
-	  coef *= exp( (d1-d2 ) * 1000);
+	  coef *= exp( (d1-d2 ) * 8000);
 	}
 	if(rues[rue].parcourue)
 		coef /= 5;
 	return coef;
 }
 
-float compute_coef_depth(int id, int src, int dest, int rue, int level=5) {
+float compute_coef_depth(int id, int src, int dest, int rue, int level=2, std::list<int> browsed=std::list<int>()) {
 	double coef_max=0.2;
 
 	for(auto& t: dests[dest]) {
 		double coef = compute_coef_simp(id, dest, t.a, t.rue);
+		bool stop = false;
+		//loop
+		for(auto& v: browsed) {
+			if(t.a == v) {
+				stop = true;
+			}
+		}
+		if(stop)
+			continue;
+
+		browsed.push_back(t.a);
 		if(level)
-			coef += compute_coef_depth(id, dest, t.a, t.rue, --level);
+			coef += compute_coef_depth(id, dest, t.a, t.rue, level-1, browsed);
+
+		browsed.pop_back();
 		if(coef > coef_max)
 			coef_max = coef;
 	}
-	return coef_max*0.6 + compute_coef_simp(id, voitures[id].position, dest, rue);
+	return coef_max*0.7 + compute_coef_simp(id, voitures[id].position, dest, rue);
 }
 
 double dist(int a, int b) {
@@ -141,9 +154,8 @@ double dist(int a, int b) {
 	return d;
 }
 
-double own_score(int a, dest_t d) {
+double own_score(int id, int a, dest_t d) {
 	return 1;
-	return (1.0*d.score)/(1.0*d.cout);
 }
 
 std::list<int> *trajet_voitures;
@@ -256,8 +268,8 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 
 		if(rues[t.rue].parcourue < 4) {
 			coef /= 1 + (rues[t.rue].parcourue+1);
-			if((coef*own_score(source, t)) > max_np) {
-				max_np = own_score(source, t)*coef;
+			if((coef*own_score(id, source, t)) > max_np) {
+				max_np = own_score(id, source, t)*coef;
 				max_np_id = t.a;
 
 				max_np_d = t;
