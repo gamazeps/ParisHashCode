@@ -107,7 +107,11 @@ float compute_coef_simp(int id, int dest1, int dest2, int rue) {
 		voitures[id].temps_arrive = temps_restant;
 	}
 	if(!voitures[id].temps_arrive) {
-	  coef *= exp( (d1-d2 ) * 8000);
+		coef *= exp( (d1-d2 ) * 8000);
+	} else {
+		if( (d1) > 0.02) {
+	  		coef *= exp( (d1-d2 ) * 1000);
+		}
 	}
 	if(!rues[rue].parcourue)
 	  coef += (54000 - temps_restant) ;
