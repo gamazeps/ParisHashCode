@@ -18,6 +18,16 @@ typedef struct {
 } rue_t;
 
 int n_intersections, n_rues, temps_restant, n_vehicules, origine;
+pos_t *inter;
+rue_t *rues;
+
+struct {
+	int a;
+	int cout;
+	int score;
+} dest_t;
+std::list<dest_t> *dests = 
+
 int main() {
 	FILE* fp = fopen("paris_54000.txt", "r");
 	fscanf(fp, "%d %d %d %d %d",
@@ -27,14 +37,14 @@ int main() {
 			&n_vehicules,
 			&origine);
 
-	pos_t *inter = new pos_t[n_intersections];
+	inter = new pos_t[n_intersections];
 	bzero(inter, sizeof(pos_t) * n_intersections);
 
 	for(int i=0; i<n_intersections; ++i) {
 		fscanf(fp, "%f %f", &inter[i].lat, &inter[i].lon);
 	}
 
-	rue_t *rues = new rue_t[n_rues];
+	rues = new rue_t[n_rues];
 	bzero(rues, sizeof(rue_t)*n_rues);
 
 	for(int i=0; i<n_rues; ++i) {
