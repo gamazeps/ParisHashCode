@@ -83,13 +83,14 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 	int cout_rand = -1;
 	int rue_rand = 0;
 	for(auto& t: d) {
+		//Random part
 		if(r == i) {
 			dest_rand = t.a;
 			cout_rand = t.cout;
 			rue_rand = t.rue;
 		}
 		++i;
-		/*
+
 		if(t.a == back)
 			continue;
 		if(!rues[t.a].parcourue) {
@@ -98,7 +99,6 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 				max_np_id = t.a;
 			}
 		}
-		*/
 	}
 	if(max_np_id == -1) {
 		voiture_goto(id, dest_rand, cout_rand, rue_rand);
