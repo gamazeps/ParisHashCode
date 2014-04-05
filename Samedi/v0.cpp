@@ -75,6 +75,30 @@ double disti(int voiture, int a) {
 	return sqrt(d);
 }
 
+float compute_coef_simp(int id, int dest1, int dest2) {
+	double coef=1;
+
+	double d1,d2;
+
+	d1 = disti(id, dest1);
+	d2 = disti(id, dest2);
+	if( d1 > 0.02) {
+		coef *= exp( (d1-d2) * 1000);
+	}
+	return coef;
+}
+
+float compute_coef_depth(int id, int dest) {
+	double coef_max=0.2;
+
+	for(auto& t: dests[dest]) {
+		double coef = compute_coef_simp(id, dest, t.a);
+		if(coef > coef_max)
+			coef_max = coef;
+	}
+	return coef_max * compute_coef_simp(id, voitures[id].position, dest);
+}
+
 double dist(int a, int b) {
 	double d = 0;
 	double tmp;
@@ -200,12 +224,7 @@ void decide_voiture(int id, int source, std::list<dest_t>& d, int back) {
 			}
 		}
 #endif
-		double d1,d2;
-		d1 = disti(id, voitures[id].position);
-		d2 = disti(id, t.a);
-		/*if( d1 > 0.03) {
-		}*/
-		coef *= exp( (d1-d2) * 1000);
+		compute_coef_depth(id, t.a);
 
 		if(rues[t.rue].parcourue < 7) {
 			coef /= 1 + (rand()%(rues[t.rue].parcourue+1));
